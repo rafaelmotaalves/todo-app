@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  db:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: "password"
+      POSTGRES_DB: "flask-todo"
+    ports:
+      - "15432:5432"
+    volumes:
+      - ./data:/var/lib/postgresql/data
