@@ -2049,6 +2049,11 @@ vue-draggable-next@^2.0.0:
   resolved "https://registry.yarnpkg.com/vue-draggable-next/-/vue-draggable-next-2.0.0.tgz#cd56253567af8b9a7b07122e1d5955dd0f1e9fcf"
   integrity sha512-HLIjg0Kmeq8DD3LIAe3Ftuwd2ng4OUJ9PLpQX9ckAhyebNpNrKPkbsL7ge0Kpxn7qFsNID+5Cyx5aX9ayf4JfA==
 
+vue-router@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/vue-router/-/vue-router-4.0.1.tgz#309240e50524b1e7d4e82e27f0a0fa25fe3d1d71"
+  integrity sha512-2C2nRxA2nCusgJyUpvcbd9Bnc9kACp/VLUCK4drXtgeRXHjQliZJcgjjP268vkGvvEKun9jjp8Ic1PpzUgbYKg==
+
 vue@^3.0.3, vue@^3.0.4:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/vue/-/vue-3.0.4.tgz#872c65c143f5717bd5387c61613d9f55f4cc0f43"
