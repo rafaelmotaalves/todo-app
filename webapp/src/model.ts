@@ -19,3 +19,15 @@ export class Todo {
     }
 
 }
+
+export class Board {
+    id: number;
+    title: string;
+    todos: Todo[]
+
+    constructor(id: number, title: string, todos: Todo[]) {
+        this.id = id;
+        this.title = title;
+        this.todos = todos;
+    }
+}

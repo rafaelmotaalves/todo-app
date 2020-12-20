@@ -1,5 +1,6 @@
 <template>
   <div>
+    <h1>{{data.title}}</h1>
     <button type="button" class="btn btn-success" data-toggle="modal" data-target="#createTodoModal">
       Create todo
     </button>
@@ -23,14 +24,16 @@ import * as api from "../api"
 
 export default {
   name: 'Board',
-  props: {},
+  props: {
+    id: String
+  },
   components: {
     Section,
     CreateTodoModal
   },
   data() {
     return {
-      data: [],
+      data: {},
       todos: [],
       doing: [],
       done: [],
@@ -42,6 +45,9 @@ export default {
   watch: {
     data: function(o, n) {
       this.separateTodos()
+    },
+    id: function(o, n) {
+      this.fetchData()
     }
   },
   methods: {
@@ -52,28 +58,28 @@ export default {
     },
     onDrop (evt, status) {
       const todoId = evt.dataTransfer.getData('todoId')
-      const todo = this.data.find(todo => todo.id == todoId)
+      const todo = this.data.todos.find(todo => todo.id == todoId)
       todo.status = status
       this.updateStatus(todoId, status)
       this.separateTodos()
     },
     separateTodos() {
-      this.todos = this.data.filter(todo => todo.status === StatusEnum.TODO)
-      this.doing = this.data.filter(todo => todo.status === StatusEnum.DOING)
-      this.done = this.data.filter(todo => todo.status === StatusEnum.DONE)
+      this.todos = this.data.todos.filter(todo => todo.status === StatusEnum.TODO)
+      this.doing = this.data.todos.filter(todo => todo.status === StatusEnum.DOING)
+      this.done = this.data.todos.filter(todo => todo.status === StatusEnum.DONE)
     },
     fetchData() {
-      api.getAllTodos()
+      api.getBoardWithTodos(this.id)
         .then(data => {
           this.data = data;
         })
         .catch(console.log)
     },
     updateStatus(todoId: number, status: StatusEnum) {
-      api.updateStatus(todoId, status);
+      api.updateStatus(this.data.id, todoId, status);
     },
     createTodo(title: string, description: string) {
-      api.createTodo(title, description)
+      api.createTodo(this.data.id, title, description)
         .then(this.fetchData)
     }
   }

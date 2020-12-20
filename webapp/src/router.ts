@@ -1,12 +1,19 @@
 import { createWebHistory, createRouter } from "vue-router";
 import Board from "./components/Board.vue";
+import Home from "./components/Home.vue"
 
 const routes = [
-  {
-    path: "/boards/:id",
-    name: "Home",
-    component: Board,
-  }
+    {
+        path: "/",
+        name: "home",
+        component: Home
+    },
+    {
+        path: "/boards/:id",
+        name: "board",
+        component: Board,
+        props: true
+    }
 ];
 
 const router = createRouter({
