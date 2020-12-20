@@ -6,7 +6,11 @@ def create_db():
     return create_engine('postgresql://postgres:password@localhost:15432/postgres')
 
 db = create_db()
-Session = sessionmaker(db)  
+Session = sessionmaker(db)
+base = declarative_base()
 
 def create_session():
     return Session()
+
+def create_tables():
+    base.metadata.create_all(db)
