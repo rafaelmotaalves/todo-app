@@ -16,5 +16,11 @@ export async function getAllTodos(): Promise<Todo[]> {
 export async function updateStatus(todoId: number, status: StatusEnum) {
     const res = await client.put(`/todos/${todoId}`, { status })
 
-    return res.data;
+    return res.data
+}
+
+export async function createTodo(title: string, description: string) {
+    const res = await client.post("/todos", { title, description })
+
+    return res.data
 }
