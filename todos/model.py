@@ -2,7 +2,7 @@ import enum
 from sqlalchemy import Column, Text, Enum, Integer, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base  
 
-from db import create_db, base
+from db import base
 
 todos_base = declarative_base()
 class StatusEnum(enum.Enum):

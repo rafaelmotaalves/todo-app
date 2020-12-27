@@ -1,6 +1,6 @@
 from flask_socketio import join_room
 
-def create_event_listener(socketio):
+def create_boards_socket_api(socketio):
     print("Registering todo event listener")
 
     @socketio.on('board_subscribe', namespace="/boards")

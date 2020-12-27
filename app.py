@@ -2,29 +2,30 @@ from flask import Flask, jsonify, g
 from flask_cors import CORS
 from flask_socketio import SocketIO
 
-from db import create_tables
+from db import create_tables, create_sessionmaker
 
 from exceptions import NotFoundException, ValidationException
 
-from todos.controller import todos_api
-from boards.controller import boards_api
+from todos.controller import create_todos_api
 
-from boards.events import create_event_listener
+from boards.controller import create_boards_api
+from boards.events import create_boards_socket_api
+
+create_tables()
+sessionmaker = create_sessionmaker()
 
 app = Flask(__name__)
 app.debug = True
 socketio = SocketIO(app, cors_allowed_origins='*')
 CORS(app)
 
-create_tables()
-create_event_listener(socketio)
-
-def add_socketio():
-    g.socketio = socketio
-app.before_request(add_socketio)
-
-app.register_blueprint(todos_api)
+boards_api = create_boards_api(sessionmaker)
 app.register_blueprint(boards_api)
+create_boards_socket_api(socketio)
+
+todos_api = create_todos_api(sessionmaker, socketio)
+app.register_blueprint(todos_api)
+
 def handle_not_found(error):
     return jsonify(errors=[f'Resource "{error.resource_name}" with id "{error.id}" was not found.']), 404
 
