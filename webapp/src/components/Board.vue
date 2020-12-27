@@ -45,7 +45,11 @@ export default {
     this.fetchData()
     socket.onConnect(() => {
       socket.subscribeToBoard(this.id, data => {
-        this.fetchData()
+        const todoIndex = this.data.todos.findIndex(todo => todo.id === data.id)
+        if (todoIndex != -1) {
+          this.data.todos[todoIndex] = data
+        }
+        this.separateTodos()
       });
     });
   },

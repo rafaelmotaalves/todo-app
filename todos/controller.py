@@ -11,6 +11,12 @@ from boards.events import emit_board_update
 
 todos_api = Blueprint('todos', __name__)
 
+@todos_api.after_request
+def notify_update_todos(response):
+    if request.method in ['POST', 'PUT']:
+        emit_board_update(g.socketio, g.board.id, response.get_json())
+    return response
+
 @todos_api.url_value_preprocessor
 def add_board(endpoint, values):
     if 'board_id' in values:
@@ -39,17 +45,15 @@ def create_todo(board_id):
     description = request.json.get('description')
     session = create_session()
 
-    td = Todo(
+    todo = Todo(
         title=title, 
         description=description,
         board_id=g.board.id
     )
-    session.add(td)
+    session.add(todo)
     session.commit()
 
-    emit_board_update(g.socketio, board_id)
-
-    return '', 204
+    return jsonify(todo.to_json()), 200
 
 @todos_api.route("/boards/<int:board_id>/todos/<int:id>", methods=["PUT"])
 def update_todo(board_id, id):
@@ -75,6 +79,4 @@ def update_todo(board_id, id):
     
     session.commit()
     
-    emit_board_update(g.socketio, board_id)
-
-    return '', 204
+    return jsonify(todo.to_json()), 200
