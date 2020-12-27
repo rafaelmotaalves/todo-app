@@ -7,6 +7,7 @@ from todos.model import Todo, StatusEnum
 from todos.validators import CreateTodoSchema, UpdateTodoSchema
 
 from boards.model import Board
+from boards.events import emit_board_update
 
 todos_api = Blueprint('todos', __name__)
 
@@ -46,6 +47,8 @@ def create_todo(board_id):
     session.add(td)
     session.commit()
 
+    emit_board_update(g.socketio, board_id)
+
     return '', 204
 
 @todos_api.route("/boards/<int:board_id>/todos/<int:id>", methods=["PUT"])
@@ -71,5 +74,7 @@ def update_todo(board_id, id):
         todo.status = StatusEnum(status)
     
     session.commit()
+    
+    emit_board_update(g.socketio, board_id)
 
     return '', 204

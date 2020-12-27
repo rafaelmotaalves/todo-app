@@ -21,6 +21,7 @@ import Card from "./Card.vue"
 import Section from "./Section.vue"
 import CreateTodoModal from "./CreateTodoModal.vue"
 import * as api from "../api"
+import * as socket from "../socket"
 
 export default {
   name: 'Board',
@@ -37,10 +38,16 @@ export default {
       todos: [],
       doing: [],
       done: [],
+      socket: null
     }
   },
   created() {
     this.fetchData()
+    socket.onConnect(() => {
+      socket.subscribeToBoard(this.id, data => {
+        this.fetchData()
+      });
+    });
   },
   watch: {
     data: function(o, n) {
@@ -76,11 +83,10 @@ export default {
         .catch(console.log)
     },
     updateStatus(todoId: number, status: StatusEnum) {
-      api.updateStatus(this.data.id, todoId, status);
+      api.updateStatus(this.data.id, todoId, status)
     },
     createTodo(title: string, description: string) {
       api.createTodo(this.data.id, title, description)
-        .then(this.fetchData)
     }
   }
 }
