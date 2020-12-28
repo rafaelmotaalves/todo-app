@@ -16,6 +16,8 @@ services:
     restart: always
     environment:
       DB_URL: 'postgresql://postgres:password@db:5432/postgres'
+      REDIS_HOST: 'cache'
+      REDIS_PORT: 6379
       FLASK_ENVIRONMENT: development
       FLASK_DEBUG: 1
     ports:
