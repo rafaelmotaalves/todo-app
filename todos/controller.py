@@ -12,23 +12,27 @@ from boards.events import emit_board_update
 def create_todos_api(sessionmaker, socketio):
     todos_api = Blueprint('todos', __name__)
 
+    @todos_api.url_value_preprocessor
+    def add_board(endpoint, values):
+        g.session = sessionmaker()
+
+        if 'board_id' in values:
+            board_id = values.get('board_id')
+
+            board = g.session.query(Board).filter(Board.id ==  board_id).one_or_none()
+            if not board:
+                raise NotFoundException(resource_name="Board", id=board_id)
+            g.board = board
+
     @todos_api.after_request
-    def notify_update_todos(response):
+    def after_request(response):
         if request.method in ['POST', 'PUT']:
             emit_board_update(socketio, g.board.id, response.get_json())
         return response
 
-    @todos_api.url_value_preprocessor
-    def add_board(endpoint, values):
-        if 'board_id' in values:
-            board_id = values.get('board_id')
-
-            session = sessionmaker()
-
-            board = session.query(Board).filter(Board.id ==  board_id).one_or_none()
-            if not board:
-                raise NotFoundException(resource_name="Board", id=board_id)
-            g.board = board
+    @todos_api.teardown_request
+    def teardown(ctx):
+        g.session.close()
         
     @todos_api.route('/boards/<int:board_id>/todos', methods=["GET"])
     def get_todos(board_id):
@@ -44,15 +48,14 @@ def create_todos_api(sessionmaker, socketio):
 
         title = request.json.get('title')
         description = request.json.get('description')
-        session = sessionmaker()
 
         todo = Todo(
             title=title, 
             description=description,
             board_id=g.board.id
         )
-        session.add(todo)
-        session.commit()
+        g.session.add(todo)
+        g.session.commit()
 
         return jsonify(todo.to_json()), 200
 
@@ -66,8 +69,7 @@ def create_todos_api(sessionmaker, socketio):
         description = request.json.get('description')
         status = request.json.get('status')
 
-        session = sessionmaker()
-        todo = session.query(Todo).filter(Todo.id == id).one_or_none()
+        todo = g.session.query(Todo).filter(Todo.id == id).one_or_none()
         if not todo:
             raise NotFoundException(resource_name="Todo", id=id)
 
@@ -78,7 +80,7 @@ def create_todos_api(sessionmaker, socketio):
         if status:
             todo.status = StatusEnum(status)
         
-        session.commit()
+        g.session.commit()
         
         return jsonify(todo.to_json()), 200
     

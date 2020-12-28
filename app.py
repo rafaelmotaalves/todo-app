@@ -6,10 +6,8 @@ from db import create_tables, create_sessionmaker
 
 from exceptions import NotFoundException, ValidationException
 
-from todos.controller import create_todos_api
-
-from boards.controller import create_boards_api
-from boards.events import create_boards_socket_api
+from boards import create_boards_app
+from todos import create_todos_app
 
 create_tables()
 sessionmaker = create_sessionmaker()
@@ -19,12 +17,8 @@ app.debug = True
 socketio = SocketIO(app, cors_allowed_origins='*')
 CORS(app)
 
-boards_api = create_boards_api(sessionmaker)
-app.register_blueprint(boards_api)
-create_boards_socket_api(socketio)
-
-todos_api = create_todos_api(sessionmaker, socketio)
-app.register_blueprint(todos_api)
+create_boards_app(app, sessionmaker, socketio)
+create_todos_app(app, sessionmaker, socketio)
 
 def handle_not_found(error):
     return jsonify(errors=[f'Resource "{error.resource_name}" with id "{error.id}" was not found.']), 404
