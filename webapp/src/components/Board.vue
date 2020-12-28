@@ -38,7 +38,6 @@ export default {
       todos: [],
       doing: [],
       done: [],
-      socket: null
     }
   },
   created() {
@@ -48,6 +47,8 @@ export default {
         const todoIndex = this.data.todos.findIndex(todo => todo.id === data.id)
         if (todoIndex != -1) {
           this.data.todos[todoIndex] = data
+        } else {
+          this.data.todos.push(data)
         }
         this.separateTodos()
       });
