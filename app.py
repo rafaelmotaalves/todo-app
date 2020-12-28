@@ -11,6 +11,7 @@ from exceptions import NotFoundException, ValidationException
 
 from boards import create_boards_app
 from todos import create_todos_app
+from health import create_health_check_api
 
 from cache import cache_client
 
@@ -29,6 +30,7 @@ CORS(app)
 
 create_boards_app(app, sessionmaker, socketio)
 create_todos_app(app, sessionmaker, socketio, cache_client)
+app.register_blueprint(create_health_check_api(sessionmaker, socketio, cache_client))
 
 def handle_not_found(error):
     return jsonify(errors=[f'Resource "{error.resource_name}" with id "{error.id}" was not found.']), 404

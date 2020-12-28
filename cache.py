@@ -7,7 +7,8 @@ class Cache():
         self.redis_client = redis.Redis(
             host=os.environ.get('REDIS_HOST'), 
             port=os.environ.get('REDIS_PORT'), 
-            db=0 
+            db=0,
+            socket_connect_timeout=5
         )
 
     def set_resource(self, resource_name, id, value):
