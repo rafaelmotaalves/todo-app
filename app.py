@@ -13,7 +13,6 @@ create_tables()
 sessionmaker = create_sessionmaker()
 
 app = Flask(__name__)
-app.debug = True
 socketio = SocketIO(app, cors_allowed_origins='*')
 CORS(app)
 
@@ -30,4 +29,4 @@ app.register_error_handler(NotFoundException, handle_not_found)
 app.register_error_handler(ValidationException, handle_validation_error)
 
 if __name__ == "__main__":
-    socketio.run(app)
+    socketio.run(app, host='0.0.0.0')

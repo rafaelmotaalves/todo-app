@@ -1,6 +1,25 @@
 version: '3'
 
 services:
+  front:
+    build:
+      context: ./webapp
+    volumes:
+      - ./webapp:/app
+    ports: 
+      - "3000:3000"
+  server:
+    build:
+      context: .
+    volumes:
+      - .:/app
+    restart: always
+    environment:
+      DB_URL: 'postgresql://postgres:password@db:5432/postgres'
+      FLASK_ENVIRONMENT: development
+      FLASK_DEBUG: 1
+    ports:
+      - "5000:5000"
   db:
     image: postgres
     environment:
@@ -10,3 +29,7 @@ services:
       - "15432:5432"
     volumes:
       - ./data:/var/lib/postgresql/data
+  cache:
+    image: redis:6-alpine
+    ports:
+      - "16379:6379" 
