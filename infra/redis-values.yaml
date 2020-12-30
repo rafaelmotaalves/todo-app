@@ -1,0 +1,10 @@
+# only for development use
+usePassword: false
+
+metrics:
+  enabled: true
+
+  serviceMonitor:
+    enabled: true
+    selector: 
+      release: prometheus

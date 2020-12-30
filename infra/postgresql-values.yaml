@@ -1,0 +1,13 @@
+# only for development use
+postgresqlUsername: postgres
+postgresqlDataDir: /bitnami/postgresql/data
+postgresqlPassword: password
+postgresqlDatabase: postgres
+
+metrics:
+  enabled: true
+
+  serviceMonitor:
+    enabled: true
+    additionalLabels:
+      release: prometheus
