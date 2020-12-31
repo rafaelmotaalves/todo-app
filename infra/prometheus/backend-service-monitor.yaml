@@ -1,0 +1,13 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: backend
+  labels:
+    name: backend
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      name: backend
+  endpoints:
+  - port: api
