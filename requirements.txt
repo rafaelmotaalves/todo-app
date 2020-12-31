@@ -7,3 +7,4 @@ jsonschema==3.2.0
 flask-socketio
 eventlet
 redis==3.5.3
+prometheus_client

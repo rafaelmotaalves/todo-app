@@ -34,7 +34,7 @@ def create_todos_api(sessionmaker, socketio, cache_client):
 
     @todos_api.after_request
     def after_request(response):
-        if request.method in ['POST', 'PUT']:
+        if response.status_code == 200 and request.method in ['POST', 'PUT']:
             emit_board_update(socketio, g.board.id, response.get_json())
             cache_client.delete_resource("TODOS", g.board.id)
 
