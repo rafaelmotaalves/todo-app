@@ -7,3 +7,5 @@ This app is toy project that i use to test and learn about new tecnologies
 * Vue.js
 * Redis
 * Socket.io
+* Prometheus/Grafana
+* Kubernetes/Helm
